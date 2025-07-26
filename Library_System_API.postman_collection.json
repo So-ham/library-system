@@ -1,0 +1,158 @@
+{
+	"info": {
+		"_postman_id": "b5e7b5e7-b5e7-b5e7-b5e7-b5e7b5e7b5e7",
+		"name": "Library System API",
+		"description": "A collection for testing the Library System API endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Books",
+			"description": "Book management endpoints",
+			"item": [
+				{
+					"name": "Get All Books",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/books",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "books"]
+						},
+						"description": "Retrieve all books from the library system"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Book",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Test Book\",\n  \"author\": \"Test Author\",\n  \"isbn\": \"9781234567897\",\n  \"publisher\": \"Test Publisher\",\n  \"publish_date\": \"{{$isoTimestamp}}\",\n  \"description\": \"A test book created via Postman\",\n  \"copies\": 3\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/books",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "books"]
+						},
+						"description": "Create a new book in the library system"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Book by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/books/118ac37f-d13a-438b-8730-c0cabb289b3b",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "books", "118ac37f-d13a-438b-8730-c0cabb289b3b"]
+						},
+						"description": "Retrieve a specific book by its ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Book",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Updated Test Book\",\n  \"author\": \"Updated Test Author\",\n  \"isbn\": \"9781234567897\",\n  \"publisher\": \"Updated Test Publisher\",\n  \"publish_date\": \"{{$isoTimestamp}}\",\n  \"description\": \"An updated test book via Postman\",\n  \"copies\": 5\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/books/118ac37f-d13a-438b-8730-c0cabb289b3b",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "books", "118ac37f-d13a-438b-8730-c0cabb289b3b"]
+						},
+						"description": "Update an existing book in the library system"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Book",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/books/118ac37f-d13a-438b-8730-c0cabb289b3b",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "books", "118ac37f-d13a-438b-8730-c0cabb289b3b"]
+						},
+						"description": "Delete a book from the library system"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Invalid Book ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/books/invalid-uuid",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "books", "invalid-uuid"]
+						},
+						"description": "Test the API's response to an invalid book ID"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Auto-capture book ID from Create Book response",
+					"pm.variables.set('baseUrl', 'http://localhost:8080');"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Auto-capture book ID from Create Book response",
+					"if (pm.info.requestName === 'Create Book' && pm.response.code === 200) {",
+					"    const responseData = pm.response.json();",
+					"    if (responseData && responseData.id) {",
+					"        pm.environment.set('bookId', responseData.id);",
+					"        console.log('Book ID captured: ' + responseData.id);",
+					"    }",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "bookId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
